@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RE-SOUND | 中古カラオケ機器の販売・買取</title>
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg: #0d0d0d;
+            --card-bg: #151515;
+            --accent: #ff8c00;
+            --text-main: #e0e0e0;
+            --text-dim: #888888;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 140, 0, 0.4);
+            --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--noise);
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Responsive Navigation */
+        nav {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            nav {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 2rem;
+            }
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        @media (min-width: 1024px) {
+            .nav-links {
+                gap: 3rem;
+            }
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Flexible Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            /* Mobile: 4 columns */
+            grid-auto-rows: minmax(150px, auto);
+            gap: 1rem;
+            padding: 2rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(8, 1fr);
+                /* Tablet: 8 columns */
+                gap: 1.25rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(12, 1fr);
+                /* Desktop: 12 columns */
+                gap: 1.5rem;
+                padding: 3rem 0;
+            }
+        }
+
+        .bento-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @media (min-width: 768px) {
+            .bento-item {
+                padding: 2.5rem;
+            }
+        }
+
+        .bento-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-hover);
+        }
+
+        /* Card Span Rules - Mobile First */
+        .hero {
+            grid-column: span 4;
+            grid-row: span 2;
+        }
+
+        .buy-card {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .sell-card {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .item-list {
+            grid-column: span 4;
+            grid-row: span 2;
+        }
+
+        .maintenance-log {
+            grid-column: span 4;
+            grid-row: span 1;
+        }
+
+        .info-card {
+            grid-column: span 4;
+        }
+
+        /* Tablet Span Adjustments */
+        @media (min-width: 768px) {
+            .hero {
+                grid-column: span 8;
+            }
+
+            .buy-card {
+                grid-column: span 4;
+            }
+
+            .sell-card {
+                grid-column: span 4;
+            }
+
+            .item-list {
+                grid-column: span 4;
+            }
+
+            .maintenance-log {
+                grid-column: span 4;
+            }
+
+            .info-card {
+                grid-column: span 8;
+            }
+        }
+
+        /* Desktop Span Adjustments */
+        @media (min-width: 1024px) {
+            .hero {
+                grid-column: span 8;
+                grid-row: span 2;
+            }
+
+            .buy-card {
+                grid-column: span 4;
+                grid-row: span 1;
+            }
+
+            .sell-card {
+                grid-column: span 4;
+                grid-row: span 1;
+            }
+
+            .item-list {
+                grid-column: span 4;
+                grid-row: span 2;
+            }
+
+            .maintenance-log {
+                grid-column: span 4;
+            }
+
+            .info-card {
+                grid-column: span 4;
+            }
+        }
+
+        /* Content Styling */
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 10vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-top: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .status-tag {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .status-tag::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .buy-card {
+            background-color: var(--accent);
+            color: #000;
+        }
+
+        .buy-card h2,
+        .sell-card h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .sell-card {
+            border: 2px solid var(--accent);
+        }
+
+        .log-line {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #00ff41;
+            margin-bottom: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .price-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        .arrow-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            padding: 3rem 1rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">RE-SOUND ARCHIVE</div>
+        <div class="nav-links">
+            <a href="#inventory">在庫一覧</a>
+            <a href="#purchase">高価買取</a>
+            <a href="#lab">検品体制</a>
+            <a href="#contact">お問い合わせ</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="bento-grid">
+
+            <section class="bento-item hero reveal">
+                <div class="status-tag">SYSTEM ONLINE: 2026</div>
+                <div>
+                    <h1>AUDIO<br>RE-BIRTH.</h1>
+                    <p style="color: var(--text-dim); margin-top: 1rem; max-width: 450px; font-size: 0.95rem;">
+                        プロ仕様のカラオケ機材を、最高級のコンディションで。中古の概念を覆す精密メンテナンス済みの名機たち。</p>
+                </div>
+            </section>
+
+            <section id="inventory" class="bento-item buy-card reveal">
+                <div>
+                    <h2>機材を購入</h2>
+                    <p style="font-size: 0.8rem;">DAM / JOYSOUND 最新機種からヴィンテージまで。</p>
+                </div>
+                <div class="arrow-btn">→</div>
+            </section>
+
+            <section id="purchase" class="bento-item sell-card reveal">
+                <div>
+                    <h2 style="color: var(--accent);">機材を売却</h2>
+                    <p style="color: var(--text-dim); font-size: 0.8rem;">全国対応・即日査定。正当に評価します。</p>
+                </div>
+                <div class="arrow-btn" style="color: var(--accent);">→</div>
+            </section>
+
+            <section class="bento-item item-list reveal">
+                <span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Featured
+                    Model</span>
+                <div style="margin-top: 1rem;">
+                    <h3 style="font-family: 'Syne';">LIVE DAM AI</h3>
+                    <span class="price-tag">¥428,000</span>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">Rank: S
+                        (Excellent)<br>Updated: 2026.03.10</p>
+                </div>
+                <button
+                    style="background:none; border: 1px solid var(--border); color: white; padding: 0.8rem; margin-top: 1rem; width: 100%; font-size: 0.8rem;">詳細を見る</button>
+            </section>
+
+            <section id="lab" class="bento-item maintenance-log reveal">
+                <div class="status-tag">LABORATORY LOG</div>
+                <div style="margin-top: 1rem;">
+                    <div class="log-line"><span>> HDD SECTOR</span><span>PASS</span></div>
+                    <div class="log-line"><span>> AUDIO CALIB</span><span>PASS</span></div>
+                    <div class="log-line"><span>> MIC SIGNAL</span><span>0.002%</span></div>
+                    <div class="log-line"><span>> FIRMWARE</span><span>V.4.2.0</span></div>
+                </div>
+            </section>
+
+            <section class="bento-item info-card reveal">
+                <h3 style="font-family: 'Syne'; margin-bottom: 0.5rem;">全国導入支援</h3>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">スナック、バー、福祉施設への導入実績 1,200件以上。設置・設定までプロにお任せください。
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 RE-SOUND KARAOKE ARCHIVE.
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
